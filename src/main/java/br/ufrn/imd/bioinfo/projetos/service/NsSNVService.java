@@ -23,7 +23,7 @@ public class NsSNVService {
 	public NsSNVService(NsSNVRepository nsSNVRepository) {
 		super();
 		this.nsSNVRepository = nsSNVRepository;
-		this.infile = "C:\\Users\\Daniel\\Downloads\\dbNSFP4.0c (1)\\dbNSFP4.0c_variant.chr";
+		this.infile = "C:\\Users\\Daniel\\Downloads\\dbNSFP4.1a\\dbNSFP4.1a_variant.chr";
 	}
 
 	public String decisionTree(NsSNV nsSNV) {
@@ -40,12 +40,21 @@ public class NsSNVService {
 					String[] collumns = line.split("\t");
 					if(collumns[1].contentEquals(Integer.toString(nsSNV.getPos())) && collumns[2].contentEquals(nsSNV.getRef()) &&
 						collumns[3].contentEquals(nsSNV.getAlt())) {
-						return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] + "\n");
+						return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
+								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47]);
 					}	
 				}
 			}
 			else if(!nsSNV.getAaalt().isBlank() && !nsSNV.getAaref().isBlank()) {
-				
+				while ((line = br.readLine()) != null) {
+					String[] collumns = line.split("\t");
+					if(collumns[1].contentEquals(Integer.toString(nsSNV.getPos())) && collumns[2].contentEquals(nsSNV.getRef()) &&
+						collumns[3].contentEquals(nsSNV.getAlt()) && collumns[4].contentEquals(nsSNV.getAaref()) &&
+						collumns[5].contentEquals(nsSNV.getAaalt()) ) {
+						return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
+								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47]);
+					}	
+				}
 			}
 			else {
 				return ("Aaalt ou Aaref em branco");
@@ -61,6 +70,67 @@ public class NsSNVService {
 		return "A";
 	}
 	
-	
+	public String allPretictiors(NsSNV nsSNV) {
+		try {
+			GZIPInputStream in = new GZIPInputStream(new FileInputStream(this.infile + nsSNV.getChr() + ".gz"));
+
+			Reader decoder = new InputStreamReader(in);
+			BufferedReader br = new BufferedReader(decoder);
+
+			String line = br.readLine();
+			
+			if(nsSNV.getAaalt() == null && nsSNV.getAaref() == null) {
+				while ((line = br.readLine()) != null) {
+					String[] collumns = line.split("\t");
+					if(collumns[1].contentEquals(Integer.toString(nsSNV.getPos())) && collumns[2].contentEquals(nsSNV.getRef()) &&
+						collumns[3].contentEquals(nsSNV.getAlt())) {
+						return("SIFT_pred: "  + collumns[38] + "\nSIFT4G_pred: "  + collumns[41] + "\nPolyphen2_HDIV_pred: "  + 
+								collumns[44] + "\nPolyphen2_HVAR_pred: "  + collumns[47] + "\nLRT_pred: "  + collumns[50] + 
+								"\nMutationTaster_pred: "  + collumns[54] + "\nMutationAssessor_pred: "  + collumns[59] + 
+								"\nFATHMM_pred: "  + collumns[62] + "\nPROVEAN_pred: "  + collumns[65] + "\nMetaSVM_pred: "  +
+								collumns[70] + "\nMetaLR_pred: "  + collumns[73] + "\nM-CAP_pred: "  + collumns[77] + 
+								"\nMutpred: _score: "  + collumns[81] + "\nPrimateAI_pred: "  + collumns[91] + "\nDEOGEN2_pred: "  +
+								collumns[94] + "\nBayesDel_addAF_pred: "  + collumns[97] + "\nBayesDel_noAF_pred: "  + collumns[100] +
+								"\nClinpred: _pred: "  + collumns[103] + "\nLIST-S2_pred: "  + collumns[106] + "\nAloft_pred: "  +
+								collumns[111] + "\nfathmm-MKL_coding_pred: "  + collumns[123] + "\nfathmm-XF_coding_pred: " + collumns[127]);
+						/*return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
+								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47]);*/
+					}
+				}
+			}
+			else if(!nsSNV.getAaalt().isBlank() && !nsSNV.getAaref().isBlank()) {
+				while ((line = br.readLine()) != null) {
+					String[] collumns = line.split("\t");
+					if(collumns[1].contentEquals(Integer.toString(nsSNV.getPos())) && collumns[2].contentEquals(nsSNV.getRef()) &&
+						collumns[3].contentEquals(nsSNV.getAlt()) && collumns[4].contentEquals(nsSNV.getAaref()) &&
+						collumns[5].contentEquals(nsSNV.getAaalt()) ) {
+						return("SIFT_pred: "  + collumns[38] + "\nSIFT4G_pred: "  + collumns[41] + "\nPolyphen2_HDIV_pred: "  + 
+								collumns[44] + "\nPolyphen2_HVAR_pred: "  + collumns[47] + "\nLRT_pred: "  + collumns[50] + 
+								"\nMutationTaster_pred: "  + collumns[54] + "\nMutationAssessor_pred: "  + collumns[59] + 
+								"\nFATHMM_pred: "  + collumns[62] + "\nPROVEAN_pred: "  + collumns[65] + "\nMetaSVM_pred: "  +
+								collumns[70] + "\nMetaLR_pred: "  + collumns[73] + "\nM-CAP_pred: "  + collumns[77] + 
+								"\nMutpred: _score: "  + collumns[81] + "\nPrimateAI_pred: "  + collumns[91] + "\nDEOGEN2_pred: "  +
+								collumns[94] + "\nBayesDel_addAF_pred: "  + collumns[97] + "\nBayesDel_noAF_pred: "  + collumns[100] +
+								"\nClinpred: _pred: "  + collumns[103] + "\nLIST-S2_pred: "  + collumns[106] + "\nAloft_pred: "  +
+								collumns[111] + "\nfathmm-MKL_coding_pred: "  + collumns[123] + "\nfathmm-XF_coding_pred: " + collumns[127]);
+						/*return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
+								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47]);*/
+					}	
+				}
+			}
+			else {
+				return ("Aaalt ou Aaref em branco");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			
+		}
+		
+		
+		return "A";
+		
+	}
 
 }

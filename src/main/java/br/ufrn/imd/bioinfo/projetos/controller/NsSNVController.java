@@ -30,4 +30,11 @@ public class NsSNVController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/predict/allPretictiors")
+	public ResponseEntity<?> allPretictiors(@Valid @RequestBody NsSNV nsSNV) {
+		String result = nsSNVService.allPretictiors(nsSNV);
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+
 }
