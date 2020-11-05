@@ -25,6 +25,21 @@ public class NsSNVService {
 		this.nsSNVRepository = nsSNVRepository;
 		this.infile = "C:\\Users\\Daniel\\Downloads\\dbNSFP4.1a\\dbNSFP4.1a_variant.chr";
 	}
+	
+	private int nDamageCount(String[] collumns) {
+		int nDamage = 0;
+		if(collumns[50].contains("D") || collumns[50].contains("U")) nDamage++;
+		if(collumns[54].contains("A") || collumns[54].contains("D")) nDamage++;
+		if(collumns[59].contains("H") || collumns[59].contains("M")) nDamage++;
+		if(collumns[62].contains("D")) nDamage++;
+		if(collumns[38].contains("D")) nDamage++;
+		if(collumns[44].contains("D") || collumns[44].contains("P")) nDamage++;
+		if(collumns[47].contains("D") || collumns[47].contains("P")) nDamage++;
+		if(!collumns[65].contains("N")) nDamage++;
+		
+		
+		return nDamage;
+	}
 
 	public String decisionTree(NsSNV nsSNV) {
 		try {
@@ -38,10 +53,15 @@ public class NsSNVService {
 			if(nsSNV.getAaalt() == null && nsSNV.getAaref() == null) {
 				while ((line = br.readLine()) != null) {
 					String[] collumns = line.split("\t");
+					
+					
 					if(collumns[1].contentEquals(Integer.toString(nsSNV.getPos())) && collumns[2].contentEquals(nsSNV.getRef()) &&
 						collumns[3].contentEquals(nsSNV.getAlt())) {
+
+						int nDamage = nDamageCount(collumns);
 						return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
-								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47]);
+								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47] +
+								"\nExac: " + collumns[243] + "\nNDAMAGE: " + nDamage + "\n");
 					}	
 				}
 			}
