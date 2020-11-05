@@ -61,7 +61,7 @@ public class NsSNVService {
 						int nDamage = nDamageCount(collumns);
 						return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
 								"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47] +
-								"\nExac: " + collumns[243] + "\nNDAMAGE: " + nDamage + "\n");
+								"\nExac: " + collumns[193] + " "+ collumns[243] + "\nNDAMAGE: " + nDamage + "\n");
 					}	
 				}
 			}
