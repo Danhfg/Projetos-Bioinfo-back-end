@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class NsSNV {
@@ -30,6 +34,32 @@ public class NsSNV {
 
 	@Column(columnDefinition = "VARCHAR(1)")
 	private String aaalt;
+	
+	@OneToOne
+	//@JsonIgnore
+	//@NotEmpty
+	@JoinColumn(name = "id_user")
+	@JsonIgnore
+	private User user;
+
+	@Column(columnDefinition = "INT")
+	@JsonIgnore
+	private Long pid;
+
+	@Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+	@JsonIgnore
+	private boolean isAlive;
+
+    @Column(columnDefinition = "TEXT")
+	private String result;
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
 
 	public long getIdNsSNV() {
 		return idNsSNV;
@@ -85,6 +115,30 @@ public class NsSNV {
 
 	public void setAaalt(String aaalt) {
 		this.aaalt = aaalt;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Long getPid() {
+		return pid;
+	}
+
+	public void setPid(Long pid) {
+		this.pid = pid;
+	}
+
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public void setAlive(boolean isAlive) {
+		this.isAlive = isAlive;
 	}
 
 }
