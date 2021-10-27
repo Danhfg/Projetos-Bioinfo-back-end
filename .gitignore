@@ -29,3 +29,5 @@ data*
 out*
 *.und*
 sonar*
+
+src/main/resources/application.properties
