@@ -5,10 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class User {
@@ -25,11 +29,27 @@ public class User {
 
 	@Column
 	@NotEmpty(message = "{senha.not.blank}")
+	@JsonIgnore
+	@ApiModelProperty(
+			  value = "Senha do usuário",
+			  dataType = "String",
+			  example = "senha123")
     private String password;
 
 	@Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
 	@JsonIgnore
 	private boolean validated;
+
+	@Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+	@JsonIgnore
+	private boolean activaded;
+
+	@ManyToOne
+	//@NotEmpty
+	@JsonIgnore
+	@JoinColumn(name = "id_tipo_usuario")
+	private Tipo_Usuario tipo_usuario;
+
 
 	public Long getIdUser() {
 		return idUser;
@@ -61,6 +81,22 @@ public class User {
 
 	public void setValidated(boolean validated) {
 		this.validated = validated;
+	}
+
+	public boolean isActivaded() {
+		return activaded;
+	}
+
+	public void setActivaded(boolean activaded) {
+		this.activaded = activaded;
+	}
+
+	public Tipo_Usuario getTipo_usuario() {
+		return tipo_usuario;
+	}
+
+	public void setTipo_usuario(Tipo_Usuario tipo_usuario) {
+		this.tipo_usuario = tipo_usuario;
 	}
 	
 }

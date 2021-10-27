@@ -53,6 +53,9 @@ public class NsSNV {
     @Column(columnDefinition = "TEXT")
 	private String result;
 
+    @Column(columnDefinition = "TEXT")
+	private String identification;
+
 	public String getResult() {
 		return result;
 	}
@@ -139,6 +142,14 @@ public class NsSNV {
 
 	public void setAlive(boolean isAlive) {
 		this.isAlive = isAlive;
+	}
+
+	public String getIdentification() {
+		return identification;
+	}
+
+	public void setIdentification(String identification) {
+		this.identification = identification;
 	}
 
 }

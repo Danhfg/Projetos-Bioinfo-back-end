@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -41,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 		 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		 /*http.authorizeRequests()
+		 http.authorizeRequests()
 			 .antMatchers(HttpMethod.POST, SIGN_IN_URL).permitAll()
 			 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
 			 .antMatchers("/v2/**").permitAll()
@@ -52,7 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			 .antMatchers("/configuration/security/**").permitAll()
 			 .antMatchers("/css/**", "/js/**", "/fonts/**").permitAll()
 			 .antMatchers("/api/validation/**").permitAll()
-			 .antMatchers("/api/reset/**").permitAll();*/
+			 .antMatchers("/api/reset/**").permitAll()
+			 .anyRequest().authenticated();
+
 		 
 		 http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 	}
@@ -60,6 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/swagger-resources/**")//
+				.antMatchers("/swagger-ui.html");
 	}
 
 	@Override
