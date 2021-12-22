@@ -1,5 +1,6 @@
 package br.ufrn.imd.bioinfo.projetos.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,13 @@ public class UserController {
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> listUsers(Pageable pageable) {
 		return new ResponseEntity<>(userService.list(pageable), HttpStatus.OK);
+	}
+
+    @GetMapping("/user")
+	@ApiOperation(value = "Retorna todos os usuários do sistema.")
+	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
+	public ResponseEntity<?> listUser(HttpServletRequest req) {
+		return new ResponseEntity<>(userService.listuser(req), HttpStatus.OK);
 	}
 
 

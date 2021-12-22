@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -52,7 +54,7 @@ public class NsSNVService {
 		return nDamage;
 	}
 	
-	public String decisionTree(HttpServletRequest  req, Long id) {
+	/*public String decisionTree(HttpServletRequest  req, Long id) {
 		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
 		Optional<NsSNV> opt_ns = nsSNVRepository.findById(id);
 		NsSNV nsSNV = opt_ns.isPresent() ? opt_ns.get() : null;
@@ -94,7 +96,7 @@ public class NsSNVService {
 				}
 			}
 		}
-	}
+	}*/
 
 	public void processPrediction(HttpServletRequest  req, NsSNV nsSNV) {
 		/*NsSNV nsSNVResult = nsSNVRepository.findByPosAndAlt(nsSNV.getPos(), nsSNV.getAlt());
@@ -120,12 +122,10 @@ public class NsSNVService {
 						"dbnsfp","-v","-db","C:\\Db\\dbNSFP4.1a.txt.gz","try.vcf");*/
 				pb = new ProcessBuilder("tabix", "/mnt/c/Db/dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==",nsSNV.getRef()," && $4==",nsSNV.getAlt(),")'");
-				System.out.println("BBBBBBBBBBB");
 			}
 			else{
-				System.out.println("AAAAAAAAAAA");
-				pb = new ProcessBuilder(
-						"wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz","1:1051275-1051275", "-p", "vcf");
+				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+						nsSNV.getPos().toString(), "-p", "vcf");
 			}
 			pb.redirectOutput(new File("data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
@@ -148,6 +148,7 @@ public class NsSNVService {
 								object = new ReversedLinesFileReader(new File("data/",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
 								String result = object.readLine();
+								result = processResult(result);
 								nsSNV.setResult(result);
 								System.out.println("Line - " + result);
 							} catch (IOException e) {
@@ -221,6 +222,20 @@ public class NsSNVService {
 		System.out.println("TESTE");
 	}
 	
+	private String processResult(String result) {
+		String[] collumns = result.split("	");
+		return("SIFT_pred:"  + collumns[38] + "\nSIFT4G_pred:"  + collumns[41] + "\nPolyphen2_HDIV_pred:"  + 
+				collumns[44] + "\nPolyphen2_HVAR_pred:"  + collumns[47] + "\nLRT_pred:"  + collumns[50] + 
+				"\nMutationTaster_pred:"  + collumns[54] + "\nMutationAssessor_pred:"  + collumns[59] + 
+				"\nFATHMM_pred:"  + collumns[62] + "\nPROVEAN_pred:"  + collumns[65] + "\nMetaSVM_pred:"  +
+				collumns[70] + "\nMetaLR_pred:"  + collumns[73] + "\nM-CAP_pred:"  + collumns[77] + 
+				"\nMutpred:_score:"  + collumns[81] + "\nPrimateAI_pred:"  + collumns[91] + "\nDEOGEN2_pred:"  +
+				collumns[94] + "\nBayesDel_addAF_pred:"  + collumns[97] + "\nBayesDel_noAF_pred:"  + collumns[100] +
+				"\nClinpred_pred:"  + collumns[103] + "\nLIST-S2_pred:"  + collumns[106] + "\nAloft_pred:"  +
+				collumns[111] + "\nfathmm-MKL_coding_pred:"  + collumns[123] + "\nfathmm-XF_coding_pred:" + collumns[127] +
+				"\nExAC_AF:" + collumns[193] + "\n1000Gp3_AF:" + collumns[171]);
+	}
+
 	public String allPretictiors(HttpServletRequest req, Long id) {
 		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
 		Optional<NsSNV> opt_ns = nsSNVRepository.findById(id);
@@ -234,24 +249,26 @@ public class NsSNVService {
 			throw new CustomException("Permision denied", HttpStatus.FORBIDDEN);
 		}
 		else {
-			String[] collumns = nsSNV.getResult().split("	");
-			return("SIFT_pred: "  + collumns[38] + "\nSIFT4G_pred: "  + collumns[41] + "\nPolyphen2_HDIV_pred: "  + 
-					collumns[44] + "\nPolyphen2_HVAR_pred: "  + collumns[47] + "\nLRT_pred: "  + collumns[50] + 
-					"\nMutationTaster_pred: "  + collumns[54] + "\nMutationAssessor_pred: "  + collumns[59] + 
-					"\nFATHMM_pred: "  + collumns[62] + "\nPROVEAN_pred: "  + collumns[65] + "\nMetaSVM_pred: "  +
-					collumns[70] + "\nMetaLR_pred: "  + collumns[73] + "\nM-CAP_pred: "  + collumns[77] + 
-					"\nMutpred: _score: "  + collumns[81] + "\nPrimateAI_pred: "  + collumns[91] + "\nDEOGEN2_pred: "  +
-					collumns[94] + "\nBayesDel_addAF_pred: "  + collumns[97] + "\nBayesDel_noAF_pred: "  + collumns[100] +
-					"\nClinpred: _pred: "  + collumns[103] + "\nLIST-S2_pred: "  + collumns[106] + "\nAloft_pred: "  +
-					collumns[111] + "\nfathmm-MKL_coding_pred: "  + collumns[123] + "\nfathmm-XF_coding_pred: " + collumns[127]);
+			return nsSNV.getResult();
+			/*String[] collumns = nsSNV.getResult().split("	");
+			return("SIFT_pred:"  + collumns[38] + "\nSIFT4G_pred:"  + collumns[41] + "\nPolyphen2_HDIV_pred:"  + 
+					collumns[44] + "\nPolyphen2_HVAR_pred:"  + collumns[47] + "\nLRT_pred:"  + collumns[50] + 
+					"\nMutationTaster_pred:"  + collumns[54] + "\nMutationAssessor_pred:"  + collumns[59] + 
+					"\nFATHMM_pred:"  + collumns[62] + "\nPROVEAN_pred:"  + collumns[65] + "\nMetaSVM_pred:"  +
+					collumns[70] + "\nMetaLR_pred:"  + collumns[73] + "\nM-CAP_pred:"  + collumns[77] + 
+					"\nMutpred:_score:"  + collumns[81] + "\nPrimateAI_pred:"  + collumns[91] + "\nDEOGEN2_pred:"  +
+					collumns[94] + "\nBayesDel_addAF_pred:"  + collumns[97] + "\nBayesDel_noAF_pred:"  + collumns[100] +
+					"\nClinpred_pred:"  + collumns[103] + "\nLIST-S2_pred:"  + collumns[106] + "\nAloft_pred:"  +
+					collumns[111] + "\nfathmm-MKL_coding_pred:"  + collumns[123] + "\nfathmm-XF_coding_pred:" + collumns[127] +
+					"\nExAC_AF:" + collumns[193] + "\n1000Gp3_AF:" + collumns[171]);*/
 			/*return("Sift: " + collumns[38] + "\nSift4G: " + collumns[41] + "\nPROVEAN: " + collumns[59] +
 					"\nPolyphen2_HDIV: " + collumns[44] + "\nPolyphen2_HVAR: " + collumns[47]);*/
 		}
 	}
 
-	public List<NsSNV> getAllResult(HttpServletRequest req) {
+	public Page<NsSNV> getAllResult(HttpServletRequest req, Pageable pageable) {
 		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-		List<NsSNV> nsSNVList = nsSNVRepository.findByUser(user);
+		Page<NsSNV> nsSNVList = nsSNVRepository.findByUser(user, pageable);
 		
 		if(nsSNVList == null || nsSNVList.isEmpty()) {
 			throw new ResourceNotFoundException("User doesn't have requests."); 
@@ -259,6 +276,16 @@ public class NsSNVService {
 		
 		return nsSNVList;
 		
+	}
+
+	public void deletePrediction(HttpServletRequest req, Long id) {
+		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+		NsSNV nssnv = nsSNVRepository.findById(id).isPresent() ? nsSNVRepository.findById(id).get() : null;
+		if (nssnv == null) 
+			throw new ResourceNotFoundException("Prediction not found");
+		if (nssnv.getUser().getIdUser() != user.getIdUser())
+			throw new CustomException("Permission denied", HttpStatus.FORBIDDEN);
+		nsSNVRepository.deleteById(nssnv.getIdNsSNV());
 	}
 
 }

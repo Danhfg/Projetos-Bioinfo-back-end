@@ -1,14 +1,15 @@
 package br.ufrn.imd.bioinfo.projetos.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,15 +33,15 @@ public class NsSNVController {
 		this.nsSNVService = nsSNVService;
 	}
 
-	@GetMapping(value = "/predict/decisionTree/{id}")
+	/*@GetMapping(value = "/predict/decisionTree/{id}")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	@Secured({"ROLE_free", "ROLE_admin"})
 	public ResponseEntity<?> decisionTree(@ApiParam(value = "Titulo da atividade a ser solicitada") @PathVariable Long id, HttpServletRequest req) {
 		String result = nsSNVService.decisionTree(req, id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
-	}
+	}*/
 
-	@PostMapping(value = "/predict/processPrediction")
+	@PostMapping(value = "/predict/process")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	@Secured({"ROLE_free", "ROLE_admin"})
 	public ResponseEntity<?> processPredictionPost(HttpServletRequest req, @Valid @RequestBody NsSNV nsSNV) {
@@ -56,9 +57,9 @@ public class NsSNVController {
 	@GetMapping(value = "/predict/results")
 	@Secured({"ROLE_free", "ROLE_admin"})
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
-	public ResponseEntity<?> results(HttpServletRequest req) {
+	public ResponseEntity<?> results(HttpServletRequest req, Pageable pageable) {
 		try {
-			List<NsSNV> list = nsSNVService.getAllResult(req);
+			Page<NsSNV> list = nsSNVService.getAllResult(req, pageable);
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 		catch (Exception e) {
@@ -72,6 +73,19 @@ public class NsSNVController {
 	public ResponseEntity<?> allPretictiors(HttpServletRequest req, @PathVariable Long id) {
 		String result = nsSNVService.allPretictiors(req, id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@DeleteMapping(value = "/predict/delete")
+	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
+	@Secured({"ROLE_free", "ROLE_admin"})
+	public ResponseEntity<?> deletePrediction(HttpServletRequest req, @RequestBody Long id) {
+		try {
+			nsSNVService.deletePrediction(req, id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+			throw e;
+		}
 	}
 
 

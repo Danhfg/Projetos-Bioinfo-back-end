@@ -20,6 +20,14 @@ public class UserDTO {
 			  dataType = "String",
 			  example = "senha123")
     private String password;
+
+	@Column(columnDefinition = "VARCHAR(100)")
+	//@NotEmpty(message = "{nome.not.blank}")
+	@ApiModelProperty(
+	  value = "Nome da pesoa",
+	  dataType = "String",
+	  example = "Daniel Henrique Ferreira Gomes")
+	private String name;
 	
 	public String getUsername() {
 		return username;
@@ -35,6 +43,14 @@ public class UserDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

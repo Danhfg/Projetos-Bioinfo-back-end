@@ -3,6 +3,8 @@ package br.ufrn.imd.bioinfo.projetos.service;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -112,6 +114,10 @@ public class UserService {
 	
 	public Page<User> list(Pageable pageable){
 		return userRepository.findAll(pageable);
+	}
+	
+	public User listuser(HttpServletRequest req){
+		return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
 	}
 
 	public void activate(Long id) {

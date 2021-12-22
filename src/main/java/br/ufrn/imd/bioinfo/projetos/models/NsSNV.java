@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,9 +35,7 @@ public class NsSNV {
 	@Column(columnDefinition = "VARCHAR(1)")
 	private String aaalt;
 	
-	@OneToOne
-	//@JsonIgnore
-	//@NotEmpty
+	@ManyToOne
 	@JoinColumn(name = "id_user")
 	@JsonIgnore
 	private User user;

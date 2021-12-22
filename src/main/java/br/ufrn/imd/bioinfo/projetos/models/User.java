@@ -50,6 +50,13 @@ public class User {
 	@JoinColumn(name = "id_tipo_usuario")
 	private Tipo_Usuario tipo_usuario;
 
+	@Column(columnDefinition = "VARCHAR(100)")
+	@NotEmpty(message = "{nome.not.blank}")
+	@ApiModelProperty(
+	  value = "Nome da pesoa",
+	  dataType = "String",
+	  example = "Daniel Henrique Ferreira Gomes")
+	private String name;
 
 	public Long getIdUser() {
 		return idUser;
@@ -97,6 +104,14 @@ public class User {
 
 	public void setTipo_usuario(Tipo_Usuario tipo_usuario) {
 		this.tipo_usuario = tipo_usuario;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setNome(String name) {
+		this.name= name;
 	}
 	
 }
