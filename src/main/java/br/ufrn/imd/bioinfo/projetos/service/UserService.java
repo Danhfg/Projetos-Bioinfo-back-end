@@ -136,7 +136,7 @@ public class UserService {
 		smm.setTo(email);
 		smm.setSubject("Email validation");
 		smm.setText("Hello!\n"
-				+ "To validate your account click on the following link: " + "https://bioinfo.imd.ufrn.br/daniel_back_end/?code=" + userValidator.getCode()
+				+ "To validate your account click on the following link: " + "https://bioinfo.imd.ufrn.br/daniel_backend/api/validation/?code=" + userValidator.getCode()
 				+ "\nTo be able to use the system, you must contact our support at the following email: daniel.gomes.702@ufrn.edu.br ");
 		try {
 			javaMailSender.send(smm);
