@@ -60,7 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			 .antMatchers("/daniel_backend/api/reset/**").permitAll()
 			 .antMatchers("/daniel_backend/api/user").permitAll()
 			 //.antMatchers("/daniel_backend/**").permitAll()
-			 .antMatchers("/api/**").permitAll()
+			 .antMatchers("/api/sign-in/**").permitAll()
+			 .antMatchers("/api/sign-up/**").permitAll()
 			 .anyRequest().authenticated();
 
 		 
