@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import br.ufrn.imd.bioinfo.projetos.error.CustomException;
 import br.ufrn.imd.bioinfo.projetos.models.NsSNV;
@@ -30,13 +33,15 @@ public class NsSNVService {
 	private final NsSNVRepository nsSNVRepository;
 	private final UserRepository userRepository;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final PythonAPI pythonAPI;
 
 	@Autowired	
 	public NsSNVService(NsSNVRepository nsSNVRepository, UserRepository userRepository,
-			JwtTokenProvider jwtTokenProvider) {
+			JwtTokenProvider jwtTokenProvider, PythonAPI pythonAPI) {
 		this.nsSNVRepository = nsSNVRepository;
 		this.userRepository = userRepository;
 		this.jwtTokenProvider = jwtTokenProvider;
+		this.pythonAPI = pythonAPI;
 	}
 
 	private int nDamageCount(String[] collumns) {
@@ -148,9 +153,11 @@ public class NsSNVService {
 								object = new ReversedLinesFileReader(new File("data/",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
 								String result = object.readLine();
+								String resultMl = processResultML(result);
+								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
-								System.out.println("Line - " + result);
+								//System.out.println("Line - " + result);
 							} catch (IOException e) {
 								e.printStackTrace();
 						 	}finally{
@@ -219,7 +226,6 @@ public class NsSNVService {
 		
 		
 		return "A";*/
-		System.out.println("TESTE");
 	}
 	
 	private String processResult(String result) {
@@ -234,6 +240,50 @@ public class NsSNVService {
 				"\nClinpred_pred:"  + collumns[103] + "\nLIST-S2_pred:"  + collumns[106] + "\nAloft_pred:"  +
 				collumns[111] + "\nfathmm-MKL_coding_pred:"  + collumns[123] + "\nfathmm-XF_coding_pred:" + collumns[127] +
 				"\nExAC_AF:" + collumns[193] + "\n1000Gp3_AF:" + collumns[171]);
+	}
+	private String processResultML(String result) {
+		String[] collumns = result.split("	");
+		String r = "";
+		
+		if(collumns[38].contains("D"))
+			r += "1,";
+		else r+= "0,";
+
+		if((collumns[44].contains("D") || collumns[44].contains("P")))
+			r+="1,";
+		else r+= "0,";
+
+		if(!collumns[65].contains("N"))
+			r+="1,";
+		else r+= "0,";
+
+		if(collumns[193].equals("."))
+		{
+			r+= "1,";
+		}
+		else
+		{
+			if (Double.parseDouble(collumns[193]) < 0.0001)
+				r+= "1,";
+			else r+= "0,";
+		}
+
+		if(nDamageCount(collumns) <= 6)
+			r+= "1,";
+		else r+= "0,";
+
+		if(collumns[171].equals("."))
+		{
+			r+= "1";
+		}
+		else
+		{
+			if (Double.parseDouble(collumns[171]) < 0.0001)
+				r+= "1";
+			else r+= "0";
+		}
+
+		return(r);
 	}
 
 	public String allPretictiors(HttpServletRequest req, Long id) {
@@ -278,6 +328,19 @@ public class NsSNVService {
 		
 	}
 
+	public List<NsSNV> getAllResult(HttpServletRequest req) {
+		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+		List<NsSNV> nsSNVList = nsSNVRepository.findByUser(user);
+
+		if(nsSNVList == null || nsSNVList.isEmpty()) {
+			throw new ResourceNotFoundException("User doesn't have requests."); 
+		}
+
+		return nsSNVList;
+		
+	}
+
+
 	public void deletePrediction(HttpServletRequest req, Long id) {
 		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
 		NsSNV nssnv = nsSNVRepository.findById(id).isPresent() ? nsSNVRepository.findById(id).get() : null;
@@ -286,6 +349,19 @@ public class NsSNVService {
 		if (nssnv.getUser().getIdUser() != user.getIdUser())
 			throw new CustomException("Permission denied", HttpStatus.FORBIDDEN);
 		nsSNVRepository.deleteById(nssnv.getIdNsSNV());
+	}
+	
+	public String getMlResults(String result) {
+		String response = pythonAPI.getMlResults(result);
+		return response;
+	}
+	
+
+	@FeignClient(url= "http://localhost:5000" , name = "pythonapi")
+	private interface PythonAPI{
+		
+	    @PostMapping("/results")
+	    public String getMlResults(@RequestBody String values);
 	}
 
 }

@@ -1,5 +1,7 @@
 package br.ufrn.imd.bioinfo.projetos.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.ufrn.imd.bioinfo.projetos.models.NsSNV;
 import br.ufrn.imd.bioinfo.projetos.service.NsSNVService;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -67,6 +68,19 @@ public class NsSNVController {
 		}
 	}
 
+	@GetMapping(value = "/predict/results/list")
+	@Secured({"ROLE_free", "ROLE_admin"})
+	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
+	public ResponseEntity<?> resultsList(HttpServletRequest req, Pageable pageable) {
+		try {
+			List<NsSNV> list = nsSNVService.getAllResult(req);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			throw e;
+		}
+	}
+
 	@GetMapping(value = "/predict/allPretictiors/{id}")
 	@Secured({"ROLE_free", "ROLE_admin"})
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
@@ -75,10 +89,10 @@ public class NsSNVController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/predict/delete")
+	@DeleteMapping(value = "/predict/delete/{id}")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	@Secured({"ROLE_free", "ROLE_admin"})
-	public ResponseEntity<?> deletePrediction(HttpServletRequest req, @RequestBody Long id) {
+	public ResponseEntity<?> deletePrediction(HttpServletRequest req, @PathVariable Long id) {
 		try {
 			nsSNVService.deletePrediction(req, id);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -87,6 +101,19 @@ public class NsSNVController {
 			throw e;
 		}
 	}
+
+	/*@GetMapping(value = "/predict/ml/{id}")
+	@Secured({"ROLE_free", "ROLE_admin"})
+	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
+	public ResponseEntity<?> resultsML(HttpServletRequest req, @PathVariable Long id) {
+		try {
+			nsSNVService.getMlResults(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+			throw e;
+		}
+	}*/
 
 
 }

@@ -1,5 +1,7 @@
 package br.ufrn.imd.bioinfo.projetos.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +16,8 @@ public interface NsSNVRepository extends JpaRepository<NsSNV, Long>{
 	NsSNV findByPosAndAlt(Integer pos, String Alt);
 	
 	Page<NsSNV> findByUser(User user, Pageable pageable);
+	
+	@Query(value="SELECT ns FROM NsSNV ns WHERE ns.user = ?1 ORDER BY ns.idNsSNV DESC")	
+	List<NsSNV> findByUser(User user);
 
 }

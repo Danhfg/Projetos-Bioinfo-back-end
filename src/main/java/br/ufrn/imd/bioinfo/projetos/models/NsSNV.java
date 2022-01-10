@@ -53,6 +53,9 @@ public class NsSNV {
 
     @Column(columnDefinition = "TEXT")
 	private String identification;
+    
+    @Column(columnDefinition = "TEXT")
+	private String resultML;
 
 	public String getResult() {
 		return result;
@@ -148,6 +151,14 @@ public class NsSNV {
 
 	public void setIdentification(String identification) {
 		this.identification = identification;
+	}
+
+	public String getResultML() {
+		return resultML;
+	}
+
+	public void setResultML(String resultML) {
+		this.resultML = resultML;
 	}
 
 }
