@@ -135,11 +135,11 @@ public class NsSNVService {
 			}
 			System.out.println(Paths.get("").toAbsolutePath()
 			        .toString());
-			File out = new File("data/",user.getIdUser().toString()+ 
+			File out = new File("./",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf");
 			out.createNewFile();
 			pb.redirectOutput(out);
-			pb.redirectError(new File("data/",user.getIdUser().toString()+ 
+			pb.redirectError(new File("./",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.log"));
 			System.out.println(pb.command());
 			Process p = pb.start();
@@ -156,7 +156,7 @@ public class NsSNVService {
 							nsSNV.setAlive(false);
 							ReversedLinesFileReader object = null;
 							try {
-								object = new ReversedLinesFileReader(new File("data/",user.getIdUser().toString()+ 
+								object = new ReversedLinesFileReader(new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
 								String result = object.readLine();
 								String resultMl = processResultML(result);
