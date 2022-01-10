@@ -126,7 +126,7 @@ public class NsSNVService {
 			if(SystemUtils.IS_OS_LINUX) {
 				/*pb = new ProcessBuilder("tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz", nsSNV.getChr(),":"+nsSNV.getPos(),"-",
 						"dbnsfp","-v","-db","C:\\Db\\dbNSFP4.1a.txt.gz","try.vcf");*/
-				pb = new ProcessBuilder("/storages/parnamirim/jorge/ref/htslib-1.10.2/tabix", "/data2/danielh/dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+				pb = new ProcessBuilder("tabix", "dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==",nsSNV.getRef()," && $4==",nsSNV.getAlt(),")'");
 			}
 			else{
@@ -137,11 +137,10 @@ public class NsSNVService {
 			        .toString());
 			File out = new File("./",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf");
-			out.createNewFile();
 			pb.redirectOutput(out);
-			pb.redirectError(new File("./",user.getIdUser().toString()+ 
-					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.log"));
-			System.out.println(pb.command());
+			File outLog = new File("./",user.getIdUser().toString()+ 
+					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.log");
+			pb.redirectError(outLog);
 			Process p = pb.start();
 
 			nsSNV.setPid(p.pid());
@@ -169,6 +168,7 @@ public class NsSNVService {
 						 	}finally{
 								nsSNVRepository.save(nsSNV);
 								out.deleteOnExit();
+								outLog.deleteOnExit();
 									try {
 										object.close();
 									} catch (IOException e) {
