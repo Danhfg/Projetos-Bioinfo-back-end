@@ -132,9 +132,9 @@ public class NsSNVService {
 				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(), "-p", "vcf");
 			}
-			pb.redirectOutput(new File("data/",user.getIdUser().toString()+ 
+			pb.redirectOutput(new File("/data/home/danielh/app/Projetos-Bioinfo-back-end/data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
-			pb.redirectError(new File("data/",user.getIdUser().toString()+ 
+			pb.redirectError(new File("/data/home/danielh/app/Projetos-Bioinfo-back-end/data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.log"));
 			Process p = pb.start();
 			
