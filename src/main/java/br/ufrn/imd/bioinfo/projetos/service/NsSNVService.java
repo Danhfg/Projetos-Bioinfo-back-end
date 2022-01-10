@@ -2,6 +2,7 @@ package br.ufrn.imd.bioinfo.projetos.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -132,6 +133,7 @@ public class NsSNVService {
 				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(), "-p", "vcf");
 			}
+			System.out.println(Paths.get(""));
 			File out = new File("data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf");
 			out.createNewFile();
