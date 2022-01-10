@@ -133,7 +133,8 @@ public class NsSNVService {
 				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(), "-p", "vcf");
 			}
-			System.out.println(Paths.get(""));
+			System.out.println(Paths.get("").toAbsolutePath()
+			        .toString());
 			File out = new File("data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf");
 			out.createNewFile();
