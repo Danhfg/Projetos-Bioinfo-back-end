@@ -134,6 +134,7 @@ public class NsSNVService {
 			}
 			File out = new File("data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf");
+			out.createNewFile();
 			pb.redirectOutput(out);
 			pb.redirectError(new File("data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.log"));
