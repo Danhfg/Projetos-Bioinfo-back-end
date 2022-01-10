@@ -85,6 +85,7 @@ public class UserService {
 			User user = new User();
 			user.setUsername(userdto.getUsername());
 			user.setPassword(new BCryptPasswordEncoder().encode(userdto.getPassword()));
+			user.setNome(userdto.getName());
 			//saveUser.setValidated(true);
 			user.setValidated(false);
 			user.setActivaded(false);
