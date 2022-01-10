@@ -25,7 +25,7 @@ public class UserValidatorController {
     public RedirectView validador(@ApiParam(value = "Código a ser validádo") @RequestParam String code){
         userValidatorServiceService.validate(code);
         RedirectView rv = new RedirectView();
-        rv.setUrl("http://bioinfo.imd.ufrn.br/dtree_app");
+        rv.setUrl("http://bioinfo.imd.ufrn.br/dtree_webapp/");
         return rv;
     }
 
