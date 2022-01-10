@@ -136,6 +136,7 @@ public class NsSNVService {
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
 			pb.redirectError(new File("/data/home/danielh/app/Projetos-Bioinfo-back-end/data/",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.log"));
+			System.out.println(pb.command());
 			Process p = pb.start();
 			System.out.println(pb.command());
 			
