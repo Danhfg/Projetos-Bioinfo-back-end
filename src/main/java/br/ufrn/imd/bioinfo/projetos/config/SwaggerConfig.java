@@ -24,6 +24,6 @@ public class SwaggerConfig {
 	
 	@SuppressWarnings("deprecation")
 	private ApiInfo apiInfo() {
-		return new ApiInfo("dtreepred", "End-points", "0.1", "", "daniel.gomes.702@ufrn.edu.br", "IMD", "http://bioinfo.imd.ufrn.br/daniel_back_end/");
+		return new ApiInfo("dtreepred", "End-points", "0.1", "", "daniel.gomes.702@ufrn.edu.br", "IMD", "https://bioinfo.imd.ufrn.br/daniel_backend/");
 	}
 }

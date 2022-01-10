@@ -357,7 +357,7 @@ public class NsSNVService {
 	}
 	
 
-	@FeignClient(url= "http://localhost:5000" , name = "pythonapi")
+	@FeignClient(url= "http://localhost:5050" , name = "pythonapi")
 	private interface PythonAPI{
 		
 	    @PostMapping("/results")

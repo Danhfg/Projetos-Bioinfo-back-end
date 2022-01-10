@@ -56,9 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			 .antMatchers("/configuration/ui/**").permitAll()
 			 .antMatchers("/configuration/security/**").permitAll()
 			 .antMatchers("/css/**", "/js/**", "/fonts/**").permitAll()
-			 .antMatchers("/api/validation/**").permitAll()
-			 .antMatchers("/api/reset/**").permitAll()
-			 .antMatchers("/api/user").permitAll()
+			 .antMatchers("/daniel_backend/api/validation/**").permitAll()
+			 .antMatchers("/daniel_backend/api/reset/**").permitAll()
+			 .antMatchers("/daniel_backend/api/user").permitAll()
 			 .anyRequest().authenticated();
 
 		 
@@ -72,8 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/swagger-resources/**")//
-				.antMatchers("/swagger-ui.html");
+		web.ignoring().antMatchers("/daniel_backend/swagger-resources/**")//
+				.antMatchers("/daniel_backend/swagger-ui.html");
 	}
 
 	@Override
