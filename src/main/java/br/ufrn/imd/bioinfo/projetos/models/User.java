@@ -51,7 +51,7 @@ public class User {
 	private Tipo_Usuario tipo_usuario;
 
 	@Column(columnDefinition = "VARCHAR(100)")
-	@NotEmpty(message = "{nome.not.blank}")
+	//@NotEmpty(message = "{nome.not.blank}")
 	@ApiModelProperty(
 	  value = "Nome da pesoa",
 	  dataType = "String",
