@@ -2,14 +2,13 @@ package br.ufrn.imd.bioinfo.projetos.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -133,8 +132,6 @@ public class NsSNVService {
 				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(), "-p", "vcf");
 			}
-			System.out.println(Paths.get("").toAbsolutePath()
-			        .toString());
 			File out = new File("./",user.getIdUser().toString()+ 
 					nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf");
 			pb.redirectOutput(out);
@@ -153,27 +150,23 @@ public class NsSNVService {
 					ph_ -> 
 						{
 							nsSNV.setAlive(false);
-							ReversedLinesFileReader object = null;
+							Scanner object = null;
 							try {
-								object = new ReversedLinesFileReader(new File("./",user.getIdUser().toString()+ 
+								object = new Scanner(new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
-								String result = object.readLine();
+								String result = object.nextLine();
 								String resultMl = processResultML(result);
 								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
-								//System.out.println("Line - " + result);
+								System.out.println("Line - " + result);
+								nsSNVRepository.save(nsSNV);
 							} catch (IOException e) {
 								e.printStackTrace();
 						 	}finally{
+						 		out.delete();
+						 		//outLog.delete();
 								nsSNVRepository.save(nsSNV);
-								out.deleteOnExit();
-								outLog.deleteOnExit();
-									try {
-										object.close();
-									} catch (IOException e) {
-										e.printStackTrace();
-								  }
 						 	}
 						});
 			//System.out.println(p.waitFor());
