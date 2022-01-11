@@ -126,7 +126,7 @@ public class NsSNVService {
 			if(SystemUtils.IS_OS_LINUX) {
 				/*pb = new ProcessBuilder("tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz", nsSNV.getChr(),":"+nsSNV.getPos(),"-",
 						"dbnsfp","-v","-db","C:\\Db\\dbNSFP4.1a.txt.gz","try.vcf");*/
-				pb = new ProcessBuilder("tabix", "dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+				pb = new ProcessBuilder("./tabix", "dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==",nsSNV.getRef()," && $4==",nsSNV.getAlt(),")'");
 			}
 			else{
