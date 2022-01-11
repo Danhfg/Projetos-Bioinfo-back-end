@@ -1,6 +1,7 @@
 package br.ufrn.imd.bioinfo.projetos.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -143,6 +144,7 @@ public class NsSNVService {
 			nsSNV.setPid(p.pid());
 			nsSNV.setAlive(true);
 			nsSNVRepository.save(nsSNV);
+			System.out.println("SALVO");
 			
 			CompletableFuture<Process> cfp = p.onExit();
 			//cfp.get();
@@ -151,23 +153,27 @@ public class NsSNVService {
 						{
 							nsSNV.setAlive(false);
 							Scanner object = null;
+							System.out.println("TESTE");
 							try {
 								object = new Scanner(new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
 								String result = object.nextLine();
+								System.out.println("Line - " + result);
 								String resultMl = processResultML(result);
 								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
 								System.out.println("Line - " + result);
+								System.out.println("SALVO2");
 								nsSNVRepository.save(nsSNV);
-							} catch (IOException e) {
+							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
 						 		out.delete();
-						 		//outLog.delete();
+						 		outLog.delete();
 								nsSNVRepository.save(nsSNV);
 						 	}
+							nsSNVRepository.save(nsSNV);							
 						});
 			//System.out.println(p.waitFor());
 			
