@@ -98,6 +98,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		corsConfig.setAllowedOrigins(Arrays.asList("*"));
 		corsConfig.addAllowedOrigin("https://danhfg.github.io/");
 		corsConfig.addAllowedOrigin("https://danhfg.github.io/#/");
+		corsConfig.addAllowedHeader("Access-Control-Allow-Origin");
+		corsConfig.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfig);
 		return source;
