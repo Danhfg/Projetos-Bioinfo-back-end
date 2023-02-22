@@ -24,6 +24,7 @@ public class UserValidatorController {
 
     @GetMapping(value = "/validation/")
     @ApiOperation(value = "Método que valida a conta de um usuário.")
+    @CrossOrigin
     public RedirectView validador(@ApiParam(value = "Código a ser validádo") @RequestParam String code){
         userValidatorServiceService.validate(code);
         RedirectView rv = new RedirectView();

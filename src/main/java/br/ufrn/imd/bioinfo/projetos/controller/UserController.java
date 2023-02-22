@@ -35,11 +35,13 @@ public class UserController {
 	}
 
     @PostMapping("/sign-in/")
+    @CrossOrigin
 	public String login(@Valid @RequestBody UserDTO user) {
 		return userService.signin(user.getUsername(), user.getPassword());
 	}
 
     @PostMapping(value="/sign-up/")
+    @CrossOrigin
     public ResponseEntity<?> saveUsuarios(@Valid @RequestBody UserDTO user){
     	return userService.singup(user);
     }
@@ -47,12 +49,14 @@ public class UserController {
     @GetMapping("/user/list")
 	@Secured({"ROLE_admin"})
 	@ApiOperation(value = "Retorna todos os usuários do sistema.")
+    @CrossOrigin
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> listUsers(Pageable pageable) {
 		return new ResponseEntity<>(userService.list(pageable), HttpStatus.OK);
 	}
 
     @GetMapping("/user")
+    @CrossOrigin
 	@ApiOperation(value = "Retorna todos os usuários do sistema.")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> listUser(HttpServletRequest req) {
@@ -62,6 +66,7 @@ public class UserController {
 
     @PostMapping("/user/activate/{id}")
 	@Secured({"ROLE_admin"})
+    @CrossOrigin
 	@ApiOperation(value = "Ativa um usuário do sistema.")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> activate(@ApiParam(value = "Id do usuário") @PathVariable Long id) {
