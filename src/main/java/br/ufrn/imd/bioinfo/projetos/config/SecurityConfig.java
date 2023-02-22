@@ -28,7 +28,7 @@ import br.ufrn.imd.bioinfo.projetos.security.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		 http.csrf().disable();
 		 
-		 http.cors();
+		 http.cors(cors -> cors.disable());
 
 		 http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -95,6 +95,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		corsConfig.addAllowedMethod(HttpMethod.PUT);
 		corsConfig.addAllowedMethod(HttpMethod.DELETE);
 		corsConfig.setAllowedOrigins(Arrays.asList("*"));
+		corsConfig.addAllowedOrigin("https://danhfg.github.io/");
+		corsConfig.addAllowedOrigin("https://danhfg.github.io/#/");
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfig);
 		return source;
