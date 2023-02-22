@@ -23,8 +23,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
+@CrossOrigin(maxAge = 3600)
 @RequestMapping("/api")
-@CrossOrigin(origins = "https://danhfg.github.io", maxAge = 3600)
 public class UserController {
 	
 	private final UserService userService;
@@ -35,7 +35,7 @@ public class UserController {
 	}
 
     @PostMapping("/sign-in/")
-    @CrossOrigin
+    @CrossOrigin(origins = "https://danhfg.github.io")
 	public String login(@Valid @RequestBody UserDTO user) {
 		return userService.signin(user.getUsername(), user.getPassword());
 	}
