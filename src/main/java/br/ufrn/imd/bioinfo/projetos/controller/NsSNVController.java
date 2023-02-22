@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiImplicitParam;
 
 @RestController
 @RequestMapping(value = "/api")
-@CrossOrigin(origins = "https://danhfg.github.io")
+@CrossOrigin(origins = "https://danhfg.github.io", maxAge = 3600)
 public class NsSNVController {
 	
 	private final NsSNVService nsSNVService;
