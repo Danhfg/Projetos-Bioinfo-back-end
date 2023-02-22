@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value="/api")
-@CrossOrigin(origins = "https://danhfg.github.io/#/")
+@CrossOrigin(origins = "https://danhfg.github.io/")
 public class UserValidatorController {
 
     private UserValidatorService userValidatorServiceService;
