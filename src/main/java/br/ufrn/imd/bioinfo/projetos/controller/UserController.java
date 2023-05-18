@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,25 +22,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@CrossOrigin(maxAge = 3600)
 @RequestMapping("/api")
 public class UserController {
-	
-	private final UserService userService;
-
-	@Autowired
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
+    @Autowired
+	private UserService userService;
 
     @PostMapping("/sign-in/")
-    @CrossOrigin(origins = "https://danhfg.github.io")
 	public String login(@Valid @RequestBody UserDTO user) {
 		return userService.signin(user.getUsername(), user.getPassword());
 	}
 
     @PostMapping(value="/sign-up/")
-    @CrossOrigin
     public ResponseEntity<?> saveUsuarios(@Valid @RequestBody UserDTO user){
     	return userService.singup(user);
     }
@@ -49,14 +40,12 @@ public class UserController {
     @GetMapping("/user/list")
 	@Secured({"ROLE_admin"})
 	@ApiOperation(value = "Retorna todos os usuários do sistema.")
-    @CrossOrigin
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> listUsers(Pageable pageable) {
 		return new ResponseEntity<>(userService.list(pageable), HttpStatus.OK);
 	}
 
     @GetMapping("/user")
-    @CrossOrigin
 	@ApiOperation(value = "Retorna todos os usuários do sistema.")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> listUser(HttpServletRequest req) {
@@ -66,7 +55,6 @@ public class UserController {
 
     @PostMapping("/user/activate/{id}")
 	@Secured({"ROLE_admin"})
-    @CrossOrigin
 	@ApiOperation(value = "Ativa um usuário do sistema.")
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
 	public ResponseEntity<?> activate(@ApiParam(value = "Id do usuário") @PathVariable Long id) {
