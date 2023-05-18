@@ -1,4 +1,4 @@
-package br.ufrn.imd.bioinfo.projetos.config;
+/*package br.ufrn.imd.bioinfo.projetos.config;
 
 import java.io.IOException;
 
@@ -45,3 +45,4 @@ public class CorsFilter implements Filter {
 
 
 
+*/
