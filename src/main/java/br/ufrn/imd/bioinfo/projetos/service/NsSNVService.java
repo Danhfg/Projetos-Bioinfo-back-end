@@ -172,6 +172,7 @@ public class NsSNVService {
 								System.out.println("SALVO2");
 								NsSNV nsSNV_new = nsSNVRepository.save(nsSNV);
 								processClinvar(req, nsSNV_new);
+								System.out.println("SAIU");
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
