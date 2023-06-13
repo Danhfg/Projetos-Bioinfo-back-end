@@ -408,15 +408,13 @@ public class NsSNVService {
 						{
 							Scanner object = null;
 							try {
-								File clinFile = new File("/db/",user.getIdUser().toString()+ 
-										nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf");
-								object = new Scanner(clinFile);
+								object = new Scanner(new File("./",user.getIdUser().toString()+ 
+											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf"));
 								String result = object.nextLine();
 								result = processClinvarResult(result);
 								nsSNV.setResultClinvar(result);
 								nsSNVRepository.save(nsSNV);
 								object.close();
-								clinFile.delete();
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
