@@ -155,7 +155,6 @@ public class NsSNVService {
 						{
 							nsSNV.setAlive(false);
 							Scanner object = null;
-							System.out.println("TESTE");
 							try {
 								object = new Scanner(new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
@@ -163,7 +162,6 @@ public class NsSNVService {
 //								if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) 
 								for (int i =0; i < 3;i++) {
 									result = object.nextLine();
-									System.out.println("TESTE:"+result.split("	")[3]);
 									if(result.split("	")[3].equalsIgnoreCase(nsSNV.getAlt())) {
 										break;
 									}
@@ -384,6 +382,7 @@ public class NsSNVService {
 	
 	public String processClinvarResult(String vcf) {
 		String[] collumns = vcf.split("	");
+		System.out.println(collumns);
 		
 		//String[] results = collumns[7].split(";");
 		
@@ -423,6 +422,7 @@ public class NsSNVService {
 								object = new Scanner(new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf"));
 								String result = object.nextLine();
+								System.out.println(result);
 								result = processClinvarResult(result);
 								nsSNV.setResultClinvar(result);
 								nsSNVRepository.save(nsSNV);
