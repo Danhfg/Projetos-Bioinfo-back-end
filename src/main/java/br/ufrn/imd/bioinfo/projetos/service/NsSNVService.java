@@ -126,7 +126,7 @@ public class NsSNVService {
 			if(SystemUtils.IS_OS_LINUX) {
 				/*pb = new ProcessBuilder("tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz", nsSNV.getChr(),":"+nsSNV.getPos(),"-",
 						"dbnsfp","-v","-db","C:\\Db\\dbNSFP4.1a.txt.gz","try.vcf");*/
-				pb = new ProcessBuilder("./tabix", "dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+				pb = new ProcessBuilder("./tabix", "/db/dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==",nsSNV.getRef()," && $4==",nsSNV.getAlt(),")'");
 			}
 			else{
@@ -386,7 +386,7 @@ public class NsSNVService {
 		try {
 			ProcessBuilder pb;
 			if(SystemUtils.IS_OS_LINUX) {
-				pb = new ProcessBuilder("./tabix", "/mnt/c/Db/clinvar.vcf.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+				pb = new ProcessBuilder("./tabix", "/db/clinvar.vcf.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
 						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==",nsSNV.getRef()," && $4==",nsSNV.getAlt(),")'");
 			}
 			else{
@@ -408,7 +408,7 @@ public class NsSNVService {
 						{
 							Scanner object = null;
 							try {
-								File clinFile = new File("./",user.getIdUser().toString()+ 
+								File clinFile = new File("/db/",user.getIdUser().toString()+ 
 										nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf");
 								object = new Scanner(clinFile);
 								String result = object.nextLine();
