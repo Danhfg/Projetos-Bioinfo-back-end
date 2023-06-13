@@ -162,7 +162,6 @@ public class NsSNVService {
 								String result = object.nextLine();
 								System.out.println("Line - " + result);
 								String resultMl = processResultML(result);
-								System.out.println(resultMl);
 								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
@@ -421,7 +420,7 @@ public class NsSNVService {
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
-						 		out.delete();
+						 		//out.delete();
 						 		outLog.delete();
 								nsSNVRepository.save(nsSNV);
 						 	}
