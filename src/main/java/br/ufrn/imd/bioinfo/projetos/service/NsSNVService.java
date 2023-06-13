@@ -145,8 +145,6 @@ public class NsSNVService {
 			nsSNV.setAlive(true);
 			nsSNVRepository.save(nsSNV);
 			System.out.println("SALVO");
-			processClinvar(req, nsSNV);
-			System.out.println(String.join(" ",pb.command().toArray(new String[0])));
 			
 			CompletableFuture<Process> cfp = p.onExit();
 			//cfp.get();
@@ -167,14 +165,13 @@ public class NsSNVService {
 									}
 									result = "";
 								}
-								System.out.println("Line - " + result);
 								String resultMl = processResultML(result);
 								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
-								System.out.println("Line - " + result);
 								System.out.println("SALVO2");
-								nsSNVRepository.save(nsSNV);
+								NsSNV nsSNV_new = nsSNVRepository.save(nsSNV);
+								processClinvar(req, nsSNV_new);
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
