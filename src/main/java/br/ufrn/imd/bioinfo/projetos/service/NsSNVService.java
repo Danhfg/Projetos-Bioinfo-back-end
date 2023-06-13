@@ -163,8 +163,8 @@ public class NsSNVService {
 //								if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) 
 								for (int i =0; i < 3;i++) {
 									result = object.nextLine();
+									System.out.println("TESTE:"+result.split("	")[3]);
 									if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) {
-										System.out.println("TESTE:"+result);
 										break;
 									}
 								}
