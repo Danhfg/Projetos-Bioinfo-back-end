@@ -145,6 +145,7 @@ public class NsSNVService {
 			nsSNV.setAlive(true);
 			nsSNVRepository.save(nsSNV);
 			System.out.println("SALVO");
+			processClinvar(req, nsSNV);
 			
 			CompletableFuture<Process> cfp = p.onExit();
 			//cfp.get();
@@ -369,5 +370,66 @@ public class NsSNVService {
 	    @PostMapping("/results")
 	    public String getMlResults(@RequestBody String values);
 	}
+	
+	public String processClinvarResult(String vcf) {
+		String[] collumns = vcf.split("	");
+		
+		//String[] results = collumns[7].split(";");
+		
+		return collumns[7];
+		
+	}
+	
+	public void processClinvar(HttpServletRequest  req, NsSNV nsSNV) {
+		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+		nsSNV.setUser(user);
+		try {
+			ProcessBuilder pb;
+			if(SystemUtils.IS_OS_LINUX) {
+				pb = new ProcessBuilder("./tabix", "/mnt/c/Db/clinvar.vcf.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==",nsSNV.getRef()," && $4==",nsSNV.getAlt(),")'");
+			}
+			else{
+				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/clinvar.vcf.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+						nsSNV.getPos().toString(), "-p", "vcf");
+			}
+			File out = new File("./",user.getIdUser().toString()+ 
+					nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf");
+			pb.redirectOutput(out);
+			File outLog = new File("./",user.getIdUser().toString()+ 
+					nsSNV.getPos().toString()+ nsSNV.getAlt()+".clinvar.log");
+			pb.redirectError(outLog);
+			Process p = pb.start();
+
+			CompletableFuture<Process> cfp = p.onExit();
+
+			cfp.thenAccept(
+					ph_ -> 
+						{
+							Scanner object = null;
+							try {
+								object = new Scanner(new File("./",user.getIdUser().toString()+ 
+											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf"));
+								String result = object.nextLine();
+								result = processClinvarResult(result);
+								nsSNV.setResultClinvar(result);
+								nsSNVRepository.save(nsSNV);
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+						 	}finally{
+						 		out.delete();
+						 		outLog.delete();
+								nsSNVRepository.save(nsSNV);
+						 	}
+							nsSNVRepository.save(nsSNV);							
+						});
+			
+		} catch (IOException /*| InterruptedException | ExecutionException*/ e) {
+			// TODO Auto-generated catch block
+			//throw new CustomException("Erro interno, entre em contato com nosso suporte", HttpStatus.INTERNAL_SERVER_ERROR);
+			System.out.println(e);
+		} 
+	}
+	
 
 }
