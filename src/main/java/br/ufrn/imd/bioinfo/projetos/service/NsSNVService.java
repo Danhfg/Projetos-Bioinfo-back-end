@@ -402,6 +402,7 @@ public class NsSNVService {
 			Process p = pb.start();
 
 			CompletableFuture<Process> cfp = p.onExit();
+			System.out.println(String.join(" ",pb.command().toArray(new String[0])));
 
 			cfp.thenAccept(
 					ph_ -> 
