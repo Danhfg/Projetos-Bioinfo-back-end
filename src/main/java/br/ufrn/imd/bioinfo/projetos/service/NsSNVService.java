@@ -169,16 +169,16 @@ public class NsSNVService {
 								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
-								System.out.println("SALVO2");
-								NsSNV nsSNV_new = nsSNVRepository.save(nsSNV);
-								processClinvar(req, nsSNV_new);
-								System.out.println("SAIU");
+								nsSNVRepository.save(nsSNV);
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
 						 		//out.delete();
 						 		outLog.delete();
-								nsSNVRepository.save(nsSNV);
+						 		NsSNV nsSNV_new = nsSNVRepository.save(nsSNV);
+						 		System.out.println("ENTROU");
+								processClinvar(req, nsSNV_new);
+								System.out.println("SAIU");
 						 	}
 							nsSNVRepository.save(nsSNV);							
 						});
