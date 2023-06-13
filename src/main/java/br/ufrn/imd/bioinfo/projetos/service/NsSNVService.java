@@ -162,11 +162,12 @@ public class NsSNVService {
 								String result = "";// = object.nextLine();
 //								if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) 
 								for (int i =0; i < 3;i++) {
-									result = object.nextLine();
 									System.out.println("TESTE:"+result.split("	")[3]);
 									if(result.split("	")[3].compareTo(nsSNV.getAlt()) == 0) {
+										result = object.nextLine();
 										break;
 									}
+									result = "";
 								}
 								System.out.println("Line - " + result);
 								String resultMl = processResultML(result);
@@ -258,6 +259,7 @@ public class NsSNVService {
 				"\nExAC_AF:" + collumns[193] + "\n1000Gp3_AF:" + collumns[171]);
 	}
 	private String processResultML(String result) {
+		if(result.equalsIgnoreCase("")) return "";
 		String[] collumns = result.split("	");
 		String r = "";
 		
