@@ -390,6 +390,7 @@ public class NsSNVService {
 	public void processClinvar(HttpServletRequest  req, NsSNV nsSNV) {
 		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
 		nsSNV.setUser(user);
+		System.out.println("ENTROU NO CLINVAR");
 		try {
 			ProcessBuilder pb;
 			if(SystemUtils.IS_OS_LINUX) {
