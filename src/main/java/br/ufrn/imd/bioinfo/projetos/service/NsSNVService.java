@@ -171,8 +171,8 @@ public class NsSNVService {
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 						 	}finally{
-						 		out.delete();
-						 		outLog.delete();
+						 		//out.delete();
+						 		//outLog.delete();
 								nsSNVRepository.save(nsSNV);
 						 	}
 							nsSNVRepository.save(nsSNV);							
