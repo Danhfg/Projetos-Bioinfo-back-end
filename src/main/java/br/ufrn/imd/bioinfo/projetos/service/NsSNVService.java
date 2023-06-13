@@ -127,7 +127,7 @@ public class NsSNVService {
 				/*pb = new ProcessBuilder("tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz", nsSNV.getChr(),":"+nsSNV.getPos(),"-",
 						"dbnsfp","-v","-db","C:\\Db\\dbNSFP4.1a.txt.gz","try.vcf");*/
 				pb = new ProcessBuilder("./tabix", "/db/dbNSFP4.1a.txt.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
-						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==\"",nsSNV.getRef(),"\" && $4==\"",nsSNV.getAlt(),"\")'");
+						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($3==\""+nsSNV.getRef()+"\" && $4==\""+nsSNV.getAlt()+"\")'");
 			}
 			else{
 				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/dbNSFP4.1a.txt.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
@@ -146,6 +146,7 @@ public class NsSNVService {
 			nsSNVRepository.save(nsSNV);
 			System.out.println("SALVO");
 			processClinvar(req, nsSNV);
+			System.out.println(String.join(" ",pb.command().toArray(new String[0])));
 			
 			CompletableFuture<Process> cfp = p.onExit();
 			//cfp.get();
@@ -387,7 +388,7 @@ public class NsSNVService {
 			ProcessBuilder pb;
 			if(SystemUtils.IS_OS_LINUX) {
 				pb = new ProcessBuilder("./tabix", "/db/clinvar.vcf.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
-						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($4==\"",nsSNV.getRef(),"\" && $5==\"",nsSNV.getAlt(),"\")'");
+						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($4==\""+nsSNV.getRef()+"\" && $5==\""+nsSNV.getAlt()+"\")'");
 			}
 			else{
 				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/clinvar.vcf.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
