@@ -164,7 +164,7 @@ public class NsSNVService {
 								for (int i =0; i < 3;i++) {
 									result = object.nextLine();
 									System.out.println("TESTE:"+result.split("	")[3]);
-									if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) {
+									if(result.split("	")[3].compareTo(nsSNV.getAlt()) == 0) {
 										break;
 									}
 								}
