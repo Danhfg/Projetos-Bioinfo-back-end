@@ -159,7 +159,14 @@ public class NsSNVService {
 							try {
 								object = new Scanner(new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+"out.vcf"));
-								String result = object.nextLine();
+								String result = "";// = object.nextLine();
+//								if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) 
+								for (int i =0; i < 3;i++) {
+									result = object.nextLine();
+									if(result.split("	")[3].compareTo(nsSNV.getAlt()) != 0) {
+										break;
+									}
+								}
 								System.out.println("Line - " + result);
 								String resultMl = processResultML(result);
 								nsSNV.setResultML(getMlResults(resultMl));
