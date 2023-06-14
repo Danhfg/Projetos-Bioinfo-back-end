@@ -190,10 +190,10 @@ public class NsSNVService {
 									}
 									File out2 = new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf");
-									pb.redirectOutput(out2);
+									pb2.redirectOutput(out2);
 									File outLog2 = new File("./",user.getIdUser().toString()+ 
 											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clinvar.log");
-									pb.redirectError(outLog2);
+									pb2.redirectError(outLog2);
 									Process p2 = pb2.start();
 
 									CompletableFuture<Process> cfp2 = p2.onExit();
