@@ -176,7 +176,6 @@ public class NsSNVService {
 						 		//out.delete();
 						 		outLog.delete();
 						 		NsSNV nsSNV_new = nsSNVRepository.save(nsSNV);
-						 		System.out.println("ENTROU");
 								//processClinvar(req, nsSNV_new);
 								try {
 									ProcessBuilder pb2;
@@ -197,7 +196,6 @@ public class NsSNVService {
 									Process p2 = pb2.start();
 
 									CompletableFuture<Process> cfp2 = p2.onExit();
-									System.out.println(String.join(" ",pb2.command().toArray(new String[0])));
 
 									cfp2.thenAccept(
 											ph_2 -> 
@@ -207,11 +205,8 @@ public class NsSNVService {
 														object2 = new Scanner(new File("./",user.getIdUser().toString()+ 
 																	nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf"));
 														String result2 = object2.nextLine();
-														System.out.println(result2);
 														result2 = processClinvarResult(result2);
-														System.out.println(nsSNV_new.getResult()+nsSNV_new.getResultClinvar());
 														nsSNV_new.setResultClinvar(result2);
-														System.out.println(nsSNV_new.getResult()+nsSNV_new.getResultClinvar());
 														nsSNVRepository.save(nsSNV_new);
 														object2.close();
 													} catch (FileNotFoundException e) {
@@ -430,68 +425,65 @@ public class NsSNVService {
 	
 	public String processClinvarResult(String vcf) {
 		String[] collumns = vcf.split("	");
-		System.out.println(collumns[7]);
-		
-		//String[] results = collumns[7].split(";");
 		
 		return collumns[7];
 		
 	}
 	
-	public void processClinvar(HttpServletRequest  req, NsSNV nsSNV) {
-		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
-		nsSNV.setUser(user);
-		System.out.println("ENTROU NO CLINVAR");
-		try {
-			ProcessBuilder pb;
-			if(SystemUtils.IS_OS_LINUX) {
-				pb = new ProcessBuilder("./tabix", "/db/clinvar.vcf.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
-						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($4==\""+nsSNV.getRef()+"\" && $5==\""+nsSNV.getAlt()+"\")'");
-			}
-			else{
-				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/clinvar.vcf.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
-						nsSNV.getPos().toString(), "-p", "vcf");
-			}
-			File out = new File("./",user.getIdUser().toString()+ 
-					nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf");
-			pb.redirectOutput(out);
-			File outLog = new File("./",user.getIdUser().toString()+ 
-					nsSNV.getPos().toString()+ nsSNV.getAlt()+".clinvar.log");
-			pb.redirectError(outLog);
-			Process p = pb.start();
-
-			CompletableFuture<Process> cfp = p.onExit();
-			System.out.println(String.join(" ",pb.command().toArray(new String[0])));
-
-			cfp.thenAccept(
-					ph_ -> 
-						{
-							Scanner object = null;
-							try {
-								object = new Scanner(new File("./",user.getIdUser().toString()+ 
-											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf"));
-								String result = object.nextLine();
-								System.out.println(result);
-								result = processClinvarResult(result);
-								nsSNV.setResultClinvar(result);
-								nsSNVRepository.save(nsSNV);
-								object.close();
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-						 	}finally{
-						 		//out.delete();
-						 		outLog.delete();
-								nsSNVRepository.save(nsSNV);
-						 	}
-							nsSNVRepository.save(nsSNV);							
-						});
-			
-		} catch (IOException /*| InterruptedException | ExecutionException*/ e) {
-			// TODO Auto-generated catch block
-			//throw new CustomException("Erro interno, entre em contato com nosso suporte", HttpStatus.INTERNAL_SERVER_ERROR);
-			System.out.println(e);
-		} 
-	}
+//	public void processClinvar(HttpServletRequest  req, NsSNV nsSNV) {
+//		User user = userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+//		nsSNV.setUser(user);
+//		System.out.println("ENTROU NO CLINVAR");
+//		try {
+//			ProcessBuilder pb;
+//			if(SystemUtils.IS_OS_LINUX) {
+//				pb = new ProcessBuilder("./tabix", "/db/clinvar.vcf.gz", nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+//						nsSNV.getPos().toString(),"-p", "vcf", "| awk '($4==\""+nsSNV.getRef()+"\" && $5==\""+nsSNV.getAlt()+"\")'");
+//			}
+//			else{
+//				pb = new ProcessBuilder("wsl", "tabix","/mnt/c/Db/clinvar.vcf.gz",nsSNV.getChr()+":"+nsSNV.getPos().toString()+"-"+
+//						nsSNV.getPos().toString(), "-p", "vcf");
+//			}
+//			File out = new File("./",user.getIdUser().toString()+ 
+//					nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf");
+//			pb.redirectOutput(out);
+//			File outLog = new File("./",user.getIdUser().toString()+ 
+//					nsSNV.getPos().toString()+ nsSNV.getAlt()+".clinvar.log");
+//			pb.redirectError(outLog);
+//			Process p = pb.start();
+//
+//			CompletableFuture<Process> cfp = p.onExit();
+//			System.out.println(String.join(" ",pb.command().toArray(new String[0])));
+//
+//			cfp.thenAccept(
+//					ph_ -> 
+//						{
+//							Scanner object = null;
+//							try {
+//								object = new Scanner(new File("./",user.getIdUser().toString()+ 
+//											nsSNV.getPos().toString()+ nsSNV.getAlt()+".clivar.result.vcf"));
+//								String result = object.nextLine();
+//								System.out.println(result);
+//								result = processClinvarResult(result);
+//								nsSNV.setResultClinvar(result);
+//								nsSNVRepository.save(nsSNV);
+//								object.close();
+//							} catch (FileNotFoundException e) {
+//								e.printStackTrace();
+//						 	}finally{
+//						 		//out.delete();
+//						 		outLog.delete();
+//								nsSNVRepository.save(nsSNV);
+//						 	}
+//							nsSNVRepository.save(nsSNV);							
+//						});
+//			
+//		} catch (IOException /*| InterruptedException | ExecutionException*/ e) {
+//			// TODO Auto-generated catch block
+//			//throw new CustomException("Erro interno, entre em contato com nosso suporte", HttpStatus.INTERNAL_SERVER_ERROR);
+//			System.out.println(e);
+//		} 
+//	}
 	
 
 }
