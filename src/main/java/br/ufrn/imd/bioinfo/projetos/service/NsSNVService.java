@@ -175,7 +175,7 @@ public class NsSNVService {
 						 	}finally{
 						 		//out.delete();
 						 		outLog.delete();
-						 		nsSNVRepository.save(nsSNV);
+						 		NsSNV nsSNV_new = nsSNVRepository.save(nsSNV);
 						 		System.out.println("ENTROU");
 								//processClinvar(req, nsSNV_new);
 								try {
@@ -209,17 +209,17 @@ public class NsSNVService {
 														String result2 = object2.nextLine();
 														System.out.println(result2);
 														result2 = processClinvarResult(result2);
-														nsSNV.setResultClinvar(result2);
-														nsSNVRepository.save(nsSNV);
+														nsSNV_new.setResultClinvar(result2);
+														nsSNVRepository.save(nsSNV_new);
 														object2.close();
 													} catch (FileNotFoundException e) {
 														e.printStackTrace();
 												 	}finally{
 												 		//out.delete();
 												 		//outLog2.delete();
-														nsSNVRepository.save(nsSNV);
+														nsSNVRepository.save(nsSNV_new);
 												 	}
-													nsSNVRepository.save(nsSNV);							
+													nsSNVRepository.save(nsSNV_new);							
 												});
 									
 								} catch (IOException /*| InterruptedException | ExecutionException*/ e) {
@@ -228,7 +228,7 @@ public class NsSNVService {
 									System.out.println(e);
 								} 
 						 	}
-							nsSNVRepository.save(nsSNV);							
+							//nsSNVRepository.save(nsSNV);							
 						});
 			//System.out.println(p.waitFor());
 			
