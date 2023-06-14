@@ -209,7 +209,9 @@ public class NsSNVService {
 														String result2 = object2.nextLine();
 														System.out.println(result2);
 														result2 = processClinvarResult(result2);
+														System.out.println(nsSNV_new.getResult()+nsSNV_new.getResultClinvar());
 														nsSNV_new.setResultClinvar(result2);
+														System.out.println(nsSNV_new.getResult()+nsSNV_new.getResultClinvar());
 														nsSNVRepository.save(nsSNV_new);
 														object2.close();
 													} catch (FileNotFoundException e) {
