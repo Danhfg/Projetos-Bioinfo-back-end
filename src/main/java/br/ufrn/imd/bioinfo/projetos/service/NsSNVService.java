@@ -428,7 +428,7 @@ public class NsSNVService {
 	
 	public String processClinvarResult(String vcf) {
 		String[] collumns = vcf.split("	");
-		System.out.println(collumns);
+		System.out.println(collumns[7]);
 		
 		//String[] results = collumns[7].split(";");
 		
