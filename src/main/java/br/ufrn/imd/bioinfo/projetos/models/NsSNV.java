@@ -59,6 +59,9 @@ public class NsSNV {
     
     @Column(columnDefinition = "TEXT")
 	private String resultClinvar;
+    
+    @Column(columnDefinition = "TEXT")
+    private String vcf;
 
 	public String getResult() {
 		return result;
@@ -170,6 +173,14 @@ public class NsSNV {
 
 	public void setResultClinvar(String resultClinvar) {
 		this.resultClinvar = resultClinvar;
+	}
+
+	public String getVcf() {
+		return vcf;
+	}
+
+	public void setVcf(String vcf) {
+		this.vcf = vcf;
 	}
 
 }

@@ -1,14 +1,18 @@
 package br.ufrn.imd.bioinfo.projetos.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +21,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.ufrn.imd.bioinfo.projetos.error.CustomException;
 import br.ufrn.imd.bioinfo.projetos.models.NsSNV;
@@ -166,6 +172,7 @@ public class NsSNVService {
 									result = "";
 								}
 								String resultMl = processResultML(result);
+								System.out.println(resultMl);
 								nsSNV.setResultML(getMlResults(resultMl));
 								result = processResult(result);
 								nsSNV.setResult(result);
@@ -426,7 +433,7 @@ public class NsSNVService {
 	}
 	
 
-	@FeignClient(url= "http://10.7.43.13:5050" , name = "pythonapi")
+	@FeignClient(url= "http://10.7.43.13:5000" , name = "pythonapi")
 	private interface PythonAPI{
 		
 	    @PostMapping("/results")
@@ -437,6 +444,34 @@ public class NsSNVService {
 		String[] collumns = vcf.split("	");
 		
 		return collumns[7];
+		
+	}
+
+	public ResponseEntity<?> processNPrediction(HttpServletRequest req, NsSNV nsSNV) {
+		
+		try (BufferedReader br = new BufferedReader(new StringReader(nsSNV.getVcf()))) {
+			String line;
+
+            // Percorre cada linha no arquivo
+            while ((line = br.readLine()) != null) {
+                if (!line.startsWith("#")) {
+                	// #CHROM POS      ID         REF   ALT    QUAL  FILTER   INFO FORMAT       NA00001
+                	String[] row = line.split("\t");
+                	NsSNV new_nsSNV = new NsSNV();
+                	new_nsSNV.setChr(row[0]);
+                	new_nsSNV.setPos(Integer.parseInt(row[1]));
+                	new_nsSNV.setRef(row[3]);
+                	new_nsSNV.setAlt(row[4]);
+                	
+                	processPrediction(req, new_nsSNV);
+                }
+            }
+
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 		
 	}
 	

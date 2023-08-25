@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.ufrn.imd.bioinfo.projetos.models.NsSNV;
 import br.ufrn.imd.bioinfo.projetos.service.NsSNVService;
@@ -49,7 +51,10 @@ public class NsSNVController {
 	@Secured({"ROLE_free", "ROLE_admin"})
 	public ResponseEntity<?> processPredictionPost(HttpServletRequest req, @Valid @RequestBody NsSNV nsSNV) {
 		try {
-			nsSNVService.processPrediction(req, nsSNV);
+			if(nsSNV.getVcf() != null && nsSNV.getVcf() != "") {
+				return nsSNVService.processNPrediction(req, nsSNV);
+			}
+			else nsSNVService.processPrediction(req, nsSNV);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		catch (Exception e) {
@@ -60,7 +65,7 @@ public class NsSNVController {
 	@GetMapping(value = "/predict/results")
 	@Secured({"ROLE_free", "ROLE_admin"})
 	@ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header", example = "Bearer access_token")
-	public ResponseEntity<?> results(HttpServletRequest req, Pageable pageable) {
+	public ResponseEntity<?> results( HttpServletRequest req, Pageable pageable) {
 		try {
 			Page<NsSNV> list = nsSNVService.getAllResult(req, pageable);
 			return new ResponseEntity<>(list, HttpStatus.OK);
