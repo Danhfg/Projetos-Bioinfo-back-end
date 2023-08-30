@@ -314,7 +314,7 @@ public class NsSNVService {
 				collumns[94] + "\nBayesDel_addAF_pred:"  + collumns[97] + "\nBayesDel_noAF_pred:"  + collumns[100] +
 				"\nClinpred_pred:"  + collumns[103] + "\nLIST-S2_pred:"  + collumns[106] + "\nAloft_pred:"  +
 				collumns[111] + "\nfathmm-MKL_coding_pred:"  + collumns[123] + "\nfathmm-XF_coding_pred:" + collumns[127] +
-				"\nExAC_AF:" + collumns[193] + "\n1000Gp3_AF:" + collumns[171]);
+				"\nExAC_AF:" + collumns[193] + "\ngenename:" + collumns[12] + "\n1000Gp3_AF:" + collumns[171]);
 	}
 	private String processResultML(String result) {
 		if(result.equalsIgnoreCase("")) return "";
