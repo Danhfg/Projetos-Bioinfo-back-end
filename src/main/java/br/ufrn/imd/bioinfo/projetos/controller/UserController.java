@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufrn.imd.bioinfo.projetos.models.UserDTO;
@@ -61,4 +62,11 @@ public class UserController {
 		userService.activate(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+    
+    @GetMapping(value = "/forgot")
+	@ApiOperation(value = "Método de esquecimento de senha.")
+    public ResponseEntity<?> forgotPassword(@ApiParam(value = "email do usuário que esqueceu a senha") @RequestParam String email){
+        userService.forgotPass(email);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

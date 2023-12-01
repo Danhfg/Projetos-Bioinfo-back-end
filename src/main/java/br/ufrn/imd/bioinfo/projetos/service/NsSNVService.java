@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -53,14 +54,14 @@ public class NsSNVService {
 
 	private int nDamageCount(String[] collumns) {
 		int nDamage = 0;
-		if(collumns[50].contains("D") || collumns[50].contains("U")) nDamage++;
-		if(collumns[54].contains("A") || collumns[54].contains("D")) nDamage++;
-		if(collumns[59].contains("H") || collumns[59].contains("M")) nDamage++;
-		if(collumns[62].contains("D")) nDamage++;
-		if(collumns[38].contains("D")) nDamage++;
-		if(collumns[44].contains("D") || collumns[44].contains("P")) nDamage++;
-		if(collumns[47].contains("D") || collumns[47].contains("P")) nDamage++;
-		if(!collumns[65].contains("N")) nDamage++;
+		if(!collumns[50].contains("N") || collumns[50].contains("D") || collumns[50].contains("U")) nDamage++;
+		if(!(collumns[54].contains("N") || collumns[54].contains("P")) || collumns[54].contains("A") || collumns[54].contains("D")) nDamage++;
+		if(!(collumns[59].contains("L") || collumns[59].contains("N")) || collumns[59].contains("H") || collumns[59].contains("M")) nDamage++;
+		if(!collumns[62].contains("T") || collumns[62].contains("D")) nDamage++;
+		if(!collumns[38].contains("T") || collumns[38].contains("D")) nDamage++;
+		if(!collumns[44].contains("B") || collumns[44].contains("D") || collumns[44].contains("P")) nDamage++;
+		if(!collumns[47].contains("B") || collumns[47].contains("D") || collumns[47].contains("P")) nDamage++;
+		if(!collumns[65].contains("N") || collumns[65].contains("D")) nDamage++;
 		
 		
 		return nDamage;
@@ -321,15 +322,15 @@ public class NsSNVService {
 		String[] collumns = result.split("	");
 		String r = "";
 		
-		if(collumns[38].contains("D"))
+		if(!collumns[38].contains("T") || collumns[38].contains("D")) //SIFT
 			r += "1,";
 		else r+= "0,";
 
-		if((collumns[44].contains("D") || collumns[44].contains("P")))
+		if(!collumns[44].contains("B") || collumns[44].contains("P") || collumns[44].contains("D")) //Poly
 			r+="1,";
 		else r+= "0,";
 
-		if(!collumns[65].contains("N"))
+		if(!collumns[65].contains("N") || collumns[65].contains("D") )
 			r+="1,";
 		else r+= "0,";
 
@@ -345,10 +346,29 @@ public class NsSNVService {
 		}
 
 		if(nDamageCount(collumns) <= 6)
-			r+= "1,";
-		else r+= "0,";
+			r+= "0,";
+		else r+= "1,";
+		
+		String aux = "";
+		
+		int millgp3[] = {171, 173, 175, 177, 179, 181}; 
+		
+		for (int i : millgp3) {
+			if(collumns[i].equals("."))
+			{
+				aux+= "1";
+			}
+			else
+			{
+				if (Double.parseDouble(collumns[i]) < 0.0001)
+					aux+= "1";
+				else aux+= "0";
+			}
+		}
+		if (aux.contains("0")) r+= "0";
+		else r+= "1";
 
-		if(collumns[171].equals("."))
+		/*if(collumns[171].equals("."))
 		{
 			r+= "1";
 		}
@@ -357,7 +377,7 @@ public class NsSNVService {
 			if (Double.parseDouble(collumns[171]) < 0.0001)
 				r+= "1";
 			else r+= "0";
-		}
+		}*/
 
 		return(r);
 	}

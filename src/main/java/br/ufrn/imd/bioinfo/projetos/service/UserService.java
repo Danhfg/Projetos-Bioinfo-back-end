@@ -85,13 +85,15 @@ public class UserService {
 			User user = new User();
 			user.setUsername(userdto.getUsername());
 			user.setPassword(new BCryptPasswordEncoder().encode(userdto.getPassword()));
-			user.setNome(userdto.getName());
+			user.setName(userdto.getName());
 			//saveUser.setValidated(true);
 			user.setValidated(false);
-			user.setActivaded(false);
+			user.setActivaded(true);
 			Tipo_Usuario tipo_Usuario = tipoUsuarioRepository.findByNome("free");
 			user.setTipo_usuario(tipo_Usuario);
 			User savedUser = userRepository.save(user);
+			
+			System.out.println(user.getName());
 			
 			UserValidator userValidator = new UserValidator();
 			userValidator.setUser(savedUser);
@@ -143,6 +145,19 @@ public class UserService {
 		} catch (Exception e) {
 			throw new RuntimeException("Houve algum erro no envio do seu email!\n" + e);
 		}
+	}
+
+
+	public void forgotPass(String email) {
+		User usuario =  userRepository.findByUsername(email);
+		if(usuario != null){
+			UserValidator validadorUser = new UserValidator();
+			validadorUser.setUser(usuario);
+			validadorUser.setCode(generateCode());
+			userValidatorRepository.save(validadorUser);
+			sendEmail(validadorUser, email);
+		}
+		
 	}
 
 	/*public void sendEmail(UserValidator userValidator, String email){
