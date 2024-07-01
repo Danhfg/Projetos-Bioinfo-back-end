@@ -67,7 +67,7 @@ public class UserService {
 				return "Bearer " + jwtTokenProvider.createToken(username, userRepository.findByUsername(username).getTipo_usuario().getNome());
 			} else if(!user.isValidated()) {
 				UserValidator userValidator = userValidatorRepository.findByUser(user);
-				sendEmail(userValidator, username);
+//				sendEmail(userValidator, username);
 				throw new CustomException("User not validated!", HttpStatus.UNPROCESSABLE_ENTITY);
 			}
 			else {
@@ -87,19 +87,19 @@ public class UserService {
 			user.setPassword(new BCryptPasswordEncoder().encode(userdto.getPassword()));
 			user.setName(userdto.getName());
 			//saveUser.setValidated(true);
-			user.setValidated(false);
+			user.setValidated(true);
 			user.setActivaded(true);
 			Tipo_Usuario tipo_Usuario = tipoUsuarioRepository.findByNome("free");
 			user.setTipo_usuario(tipo_Usuario);
-			User savedUser = userRepository.save(user);
+//			User savedUser = userRepository.save(user);
 			
-			System.out.println(user.getName());
+//			System.out.println(user.getName());
 			
-			UserValidator userValidator = new UserValidator();
-			userValidator.setUser(savedUser);
-			userValidator.setCode(generateCode());
-			userValidatorRepository.save(userValidator);
-			sendEmail(userValidator, user.getUsername());
+//			UserValidator userValidator = new UserValidator();
+//			userValidator.setUser(savedUser);
+//			userValidator.setCode(generateCode());
+//			userValidatorRepository.save(userValidator);
+//			sendEmail(userValidator, user.getUsername());
 		}else {
 			throw new DuplicatedEntryException("Duplicated Email");
 		}

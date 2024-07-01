@@ -24,7 +24,7 @@ public class User {
     
 	@Column(columnDefinition = "VARCHAR(100)", unique = true)
 	@NotEmpty(message = "{email.not.blank}")
-	@Email(message = "{email.not.valid}")
+	//@Email(message = "{email.not.valid}")
     private String username;
 
 	@Column
