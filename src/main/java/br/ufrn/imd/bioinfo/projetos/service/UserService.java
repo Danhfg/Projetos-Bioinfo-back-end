@@ -91,9 +91,9 @@ public class UserService {
 			user.setActivaded(true);
 			Tipo_Usuario tipo_Usuario = tipoUsuarioRepository.findByNome("free");
 			user.setTipo_usuario(tipo_Usuario);
-//			User savedUser = userRepository.save(user);
+			User savedUser = userRepository.save(user);
 			
-//			System.out.println(user.getName());
+			System.out.println(savedUser.getName());
 			
 //			UserValidator userValidator = new UserValidator();
 //			userValidator.setUser(savedUser);
